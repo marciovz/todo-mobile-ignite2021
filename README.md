@@ -1,38 +1,57 @@
-<p align="center">
-  <img alt="Rocketseat Education" src="https://avatars.githubusercontent.com/u/69590972?s=200&v=4" width="100px" />
-</p>
+<h1 align="center">TODO</h1>
 
-<p align="center">
-  <img src="https://img.shields.io/static/v1?label=Rocketseat&message=Education&color=8257e5&labelColor=202024" alt="Rocketseat Project" />
-  <a href="LICENSE"><img  src="https://img.shields.io/static/v1?label=License&message=MIT&color=8257e5&labelColor=202024" alt="License"></a>
-</p>
+## Introdução
+
+O TODO é um aplicativo para controle de tarefas, onde o usuário pode inserir uma tarefa, marcar como concluída ou excluí-la da listagem.
+
+É um projeto que possuí o intuíto de aplicar os conceitos básicos aprendidos no módulo 1 do curso Ignite React Native da Rocketseat versão 2021.
+
+<div align="center">
+  <img alt="Todo Aplication" src="./assets/images/home.png" width="150px" />
+  <img alt="Todo Aplication" src="./assets/images/digitando.png" width="150px" />
+  <img alt="Todo Aplication" src="./assets/images/adicionado.png" width="150px" />
+</div>
+
+## Tecnologias 
+
+- React Native
+- Typescript
+- Jest
+
+## Requisitos
+
+- Nodejs
+- React Native cli
+- Emulador Android Studio
 
 
-## 💻 Projeto
+## Instalação
 
-ignite-template-react-native-todos
+```sh
+# Fazer o clone do projeto em uma máquina local
+git clone https://github.com/marciovz/todo-mobile-ignite2021.git
+```
 
-## 📝 Licença
+```sh
+# Acessa a pasta do projeto
+cd todo-mobile-ignite2021
+```
 
-Esse projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+```sh
+# Rodar a instalação das dependências do projeto
+npm install
+```
 
----
+## Rodando a aplicação
 
-<p align="center">
-  Feito com 💜 by Rocketseat
-</p>
+Abrir o emulador ou conectar um dispositivo para rodar a aplicação
 
+```sh
+# Rodar o bundle da aplicação.
+npx react-native start
+```
 
-<!--START_SECTION:footer-->
-
-<br />
-<br />
-
-<p align="center">
-  <a href="https://discord.gg/rocketseat" target="_blank">
-    <img align="center" src="https://storage.googleapis.com/golden-wind/comunidade/rodape.svg" alt="banner"/>
-  </a>
-</p>
-
-<!--END_SECTION:footer-->
-
+```sh
+# Rodar a aplicação
+npx react-native run-android
+```
