@@ -43,27 +43,29 @@ export function Home() {
       return Alert.alert('Task já cadastrada', 'Você não pode renomear uma task com o mesmo nome');
     }
 
-    const tasksUpdated = tasks;
-    const indexTask = tasksUpdated.findIndex(taskItem => taskItem.id === taskId);
+    const updatedTasks = tasks.map(task => ({...task}));
+    
+    const taskToBeUpdated = updatedTasks.find(task => task.id === taskId);
 
-    if (indexTask < 0) return;
-    tasksUpdated[indexTask].title = taskNewTitle;
+    if (!taskToBeUpdated) return;
 
-    setTasks([ ...tasksUpdated]);
+    taskToBeUpdated.title = taskNewTitle;
+
+    setTasks(updatedTasks);
   }
 
   function handleRemoveTask(id: number) {
     Alert.alert('Remover item', 'Tem certeza que você deseja remover esse item?', [
+      {
+        text: 'Não',
+        style: 'cancel'
+      },
       {
         text: 'Sim',
         onPress: () => {
           const newListUpdated = tasks.filter( taskItem => taskItem.id !== id);
           setTasks(newListUpdated);
         }
-      },
-      {
-        text: 'Não',
-        style: 'cancel'
       }
     ]);
   }
