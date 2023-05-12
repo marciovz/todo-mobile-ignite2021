@@ -91,26 +91,17 @@ export function TaskItem({ index, task, toggleTaskDone, editTask, removeTask }: 
       >
         {
           isEditing ? (
-            <TouchableOpacity
-              onPress={handleCancelEditing}
-            >
-              <Icon 
-                name="x"
-                size={24}
-                color="#B2B2B2"
-              />
+            <TouchableOpacity onPress={handleCancelEditing} >
+              <Icon name="x" size={24} color="#B2B2B2" />
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity
-              onPress={handleStartEditing}
-            >
+            <TouchableOpacity onPress={handleStartEditing} >
               <Image source={penIcon} width={24} />
             </TouchableOpacity>
           )
         }
 
         <View style={styles.divisor} />
-
 
         <TouchableOpacity
           testID={`trash-${index}`}         
