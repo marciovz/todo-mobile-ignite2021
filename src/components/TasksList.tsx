@@ -21,9 +21,8 @@ export function TasksList({ tasks, toggleTaskDone, editTask, removeTask }: Tasks
       renderItem={({ item, index }) => {
         return (
           <ItemWrapper index={index}>
-            <TaskItem 
+            <TaskItem
               task={ item } 
-              index={index} 
               toggleTaskDone={toggleTaskDone}
               editTask={editTask}
               removeTask={removeTask}
