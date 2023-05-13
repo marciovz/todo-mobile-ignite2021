@@ -12,14 +12,13 @@ export interface Task {
 }
 
 interface TaskItemProps {
-  index: number;
   task: Task;
   toggleTaskDone: (id: number) => void;
   editTask: (id: number, newTitle: string) => void;
   removeTask: (id: number) => void;  
 }
 
-export function TaskItem({ index, task, toggleTaskDone, editTask, removeTask }: TaskItemProps) {
+export function TaskItem({ task, toggleTaskDone, editTask, removeTask }: TaskItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [ title, setTitle] = useState(task.title);
 
@@ -36,6 +35,7 @@ export function TaskItem({ index, task, toggleTaskDone, editTask, removeTask }: 
   
   function handleSubmitEditing() {
     editTask(task.id, title);
+    setTitle(task.title);
     setIsEditing(false);
   }
 
@@ -49,18 +49,22 @@ export function TaskItem({ index, task, toggleTaskDone, editTask, removeTask }: 
     }
   }, [isEditing]);
 
+  useEffect(() => {
+    setTitle(task.title);
+  },[task])
+
   return (
     <>
       <View>
         <TouchableOpacity
-          testID={`button-${index}`}
+          testID={`taskItem-${task.id}`}
           activeOpacity={0.7}
           style={styles.taskButton}
           onPress={() => toggleTaskDone(task.id)}
           disabled={isEditing}
         >
           <View 
-            testID={`marker-${index}`}
+            testID={`marker-${task.id}`}
             style={task.done ? styles.taskMarkerDone : styles.taskMarker}
           >
             { task.done && (
@@ -73,6 +77,7 @@ export function TaskItem({ index, task, toggleTaskDone, editTask, removeTask }: 
           </View>
 
           <TextInput
+            testID={String(task.id)}
             ref={textInputRef}
             style={task.done ? styles.taskTextDone : styles.taskText}
             editable={isEditing}
@@ -91,11 +96,17 @@ export function TaskItem({ index, task, toggleTaskDone, editTask, removeTask }: 
       >
         {
           isEditing ? (
-            <TouchableOpacity onPress={handleCancelEditing} >
+            <TouchableOpacity 
+              testID={`cancelEditTaskItemButton-${task.id}`}
+              onPress={handleCancelEditing} 
+            >
               <Icon name="x" size={24} color="#B2B2B2" />
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity onPress={handleStartEditing} >
+            <TouchableOpacity
+              testID={`editTaskItemButton-${task.id}`}
+              onPress={handleStartEditing} 
+            >
               <Image source={penIcon} width={24} />
             </TouchableOpacity>
           )
@@ -104,7 +115,7 @@ export function TaskItem({ index, task, toggleTaskDone, editTask, removeTask }: 
         <View style={styles.divisor} />
 
         <TouchableOpacity
-          testID={`trash-${index}`}         
+          testID={`trash-${task.id}`}         
           disabled={isEditing}
           onPress={() => removeTask(task.id)}
         >
@@ -119,7 +130,6 @@ export function TaskItem({ index, task, toggleTaskDone, editTask, removeTask }: 
     </>        
   )
 }
-
 
 const styles = StyleSheet.create({
   taskButton: {
