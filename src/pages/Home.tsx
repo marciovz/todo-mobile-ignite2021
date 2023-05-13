@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { Alert, Modal, StyleSheet, View } from 'react-native';
 
 import { Header } from '../components/Header';
 import { TasksList } from '../components/TasksList';
 import { Task } from '../components/TaskItem';
 import { TodoInput } from '../components/TodoInput';
+import { AlertModal } from '../components/AlertModal';
 
 export function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [modaRemoveTasklOpen, setModalRemoveTaskOpen] = useState(false);
+  const [taskIdSelected, setTaskIdSelected] = useState<number | null>(null);
 
   function handleAddTask(newTaskTitle: string) {
     const taskFinded = tasks.find(taskItem => taskItem.title === newTaskTitle);
@@ -54,20 +57,33 @@ export function Home() {
     setTasks(updatedTasks);
   }
 
-  function handleRemoveTask(id: number) {
-    Alert.alert('Remover item', 'Tem certeza que você deseja remover esse item?', [
-      {
-        text: 'Não',
-        style: 'cancel'
-      },
-      {
-        text: 'Sim',
-        onPress: () => {
-          const newListUpdated = tasks.filter( taskItem => taskItem.id !== id);
-          setTasks(newListUpdated);
-        }
-      }
-    ]);
+  function handleConfirmRemoveTask(id: number) {
+    setTaskIdSelected(id)
+    setModalRemoveTaskOpen(true);
+  }
+
+  function handleRemoveTask() {
+    const newListUpdated = tasks.filter( taskItem => taskItem.id !== taskIdSelected);
+    setTasks(newListUpdated);
+    handleCloseRemoveTaskModal();
+    // Alert.alert('Remover item', 'Tem certeza que você deseja remover esse item?', [
+    //   {
+    //     text: 'Não',
+    //     style: 'cancel'
+    //   },
+    //   {
+    //     text: 'Sim',
+    //     onPress: () => {
+    //       const newListUpdated = tasks.filter( taskItem => taskItem.id !== id);
+    //       setTasks(newListUpdated);
+    //     }
+    //   }
+    // ]);
+  }
+
+  function handleCloseRemoveTaskModal() {
+    setTaskIdSelected(null)
+    setModalRemoveTaskOpen(false);
   }
 
   return (
@@ -80,8 +96,31 @@ export function Home() {
         tasks={tasks} 
         toggleTaskDone={handleToggleTaskDone}
         editTask={handleEditTask}
-        removeTask={handleRemoveTask} 
+        removeTask={handleConfirmRemoveTask} 
       />
+
+      <Modal 
+        testID="modal-remove-task" 
+        visible={modaRemoveTasklOpen}
+        transparent={true}  
+      >
+        <AlertModal 
+          title='Remover item' 
+          content='Tem certeza que você deseja remover esse item?'
+          buttons={[
+            {
+              title: 'Cancel',
+              buttonStyle: 'cancel',
+              onPress: handleCloseRemoveTaskModal
+            },
+            {
+              title: 'Remover',
+              buttonStyle: 'confirm',
+              onPress: handleRemoveTask
+            }
+          ]}
+        />  
+      </Modal>
     </View>
   )
 }
