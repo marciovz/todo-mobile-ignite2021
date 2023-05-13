@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, Modal, StyleSheet, View } from 'react-native';
 
 import { Header } from '../components/Header';
@@ -9,9 +9,11 @@ import { AlertModal } from '../components/AlertModal';
 
 export function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [modaRemoveTasklOpen, setModalRemoveTaskOpen] = useState(false);
+  const [modalRemoveTasklOpen, setModalRemoveTaskOpen] = useState(false);
+  const [modalEditTaskErrorOpen, setModalEditTaskErrorOpen] = useState(false);
   const [taskIdSelected, setTaskIdSelected] = useState<number | null>(null);
 
+  
   function handleAddTask(newTaskTitle: string) {
     const taskFinded = tasks.find(taskItem => taskItem.title === newTaskTitle);
 
@@ -30,29 +32,34 @@ export function Home() {
   }
 
   function handleToggleTaskDone(id: number) {
-    const tasksUpdated = tasks;
-    const indexTask = tasksUpdated.findIndex(taskItem => taskItem.id === id);
+    const newTasks = tasks.map(task => ({...task}));
 
-    if (indexTask < 0) return;
-    tasksUpdated[indexTask].done = !tasksUpdated[indexTask].done;
+    const taskToEdit = newTasks.find(taskItem => taskItem.id === id);
 
-    setTasks([ ...tasksUpdated]);
+    if (!taskToEdit) return;
+
+    taskToEdit.done = !taskToEdit.done;
+
+    setTasks(newTasks);
   }
 
   function handleEditTask(taskId: number, taskNewTitle: string) {
-    const taskFinded = tasks.find(taskItem => taskItem.title === taskNewTitle);
-
-    if (taskFinded) {
-      return Alert.alert('Task já cadastrada', 'Você não pode renomear uma task com o mesmo nome');
-    }
-
     const updatedTasks = tasks.map(task => ({...task}));
     
-    const taskToBeUpdated = updatedTasks.find(task => task.id === taskId);
+    const taskFinded = updatedTasks.find(taskItem => taskItem.title === taskNewTitle);
+    
+    if (taskFinded) {
+      return setModalEditTaskErrorOpen(true);
+      
+    } 
+    
 
-    if (!taskToBeUpdated) return;
-
-    taskToBeUpdated.title = taskNewTitle;
+      const taskToBeUpdated = updatedTasks.find(task => task.id === taskId);
+  
+      if (taskToBeUpdated) {
+        taskToBeUpdated.title = taskNewTitle;
+      }
+    
 
     setTasks(updatedTasks);
   }
@@ -66,24 +73,15 @@ export function Home() {
     const newListUpdated = tasks.filter( taskItem => taskItem.id !== taskIdSelected);
     setTasks(newListUpdated);
     handleCloseRemoveTaskModal();
-    // Alert.alert('Remover item', 'Tem certeza que você deseja remover esse item?', [
-    //   {
-    //     text: 'Não',
-    //     style: 'cancel'
-    //   },
-    //   {
-    //     text: 'Sim',
-    //     onPress: () => {
-    //       const newListUpdated = tasks.filter( taskItem => taskItem.id !== id);
-    //       setTasks(newListUpdated);
-    //     }
-    //   }
-    // ]);
   }
 
   function handleCloseRemoveTaskModal() {
     setTaskIdSelected(null)
     setModalRemoveTaskOpen(false);
+  }
+
+  function handleCloseEditTaskErrorModal() {
+    setModalEditTaskErrorOpen(false);
   }
 
   return (
@@ -101,7 +99,7 @@ export function Home() {
 
       <Modal 
         testID="modal-remove-task" 
-        visible={modaRemoveTasklOpen}
+        visible={modalRemoveTasklOpen}
         transparent={true}  
       >
         <AlertModal 
@@ -114,9 +112,29 @@ export function Home() {
               onPress: handleCloseRemoveTaskModal
             },
             {
+              testId: 'confirm-remove-task-button',
               title: 'Remover',
               buttonStyle: 'confirm',
               onPress: handleRemoveTask
+            }
+          ]}
+        />  
+      </Modal>
+
+      <Modal 
+        testID="modal-edit-task-error" 
+        visible={modalEditTaskErrorOpen}
+        transparent={true}  
+      >
+        <AlertModal 
+          title='Ops... ' 
+          content='Tarefa já existente. Tente outro nome.?'
+          buttons={[
+            {
+              testId: 'close-modal-edit-task-error-button',
+              title: 'OK',
+              buttonStyle: 'confirm',
+              onPress: handleCloseEditTaskErrorModal
             }
           ]}
         />  
