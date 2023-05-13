@@ -25,8 +25,10 @@ export function AlertModal({ title, content, buttons }: AlertModalProps) {
         <Text style={styles.contentText}>{content}</Text>
         <View style={styles.footer}>
           {
-            buttons.map(buttonItem => (
+            buttons.map((buttonItem, index) => (
               <TouchableOpacity
+                key={index}
+                testID={buttonItem.testId}
                 style={[styles.button, buttonItem.buttonStyle === 'confirm' ? styles.buttonConfirm : styles.buttonCancel]}
                 onPress={buttonItem.onPress}>
                 <Text style={styles.buttonText}>{buttonItem.title}</Text>
